@@ -10,9 +10,13 @@ Curso JavaScript ES6, 4 módulos | 22 aluas
 - @babel/preset-env
 - @babel/core
 - @babel/plugin-proposal-object-rest-spread
+- @babel/plugin-transform-async-to-generator
+- @babel/polyfill
 - babel-loader@8.0.0-beta.0
 - webpack
 - webpack-cli
+- webpack-dev-server
+- axios
 
 #### Conceitos
 
@@ -33,27 +37,37 @@ Servidor de desenvolvimento para quem desenvolve em JavaScript
     ```javascript
     {
         "presets" : ["@babel/preset-env"],
-        "plugins": ["@babel/plugin-proposal-object-rest-spread"]
+        "plugins": [
+            "@babel/plugin-proposal-object-rest-spread",
+            "@babel/plugin-transform-async-to-generator"
+        ]
     }
     ```
 
 - Gerando o arquivo `bundle.js`, adicionar comandos dentro do arquivo `pacakge.json`:
     ```javascript
     "scripts" : {
-        "dev": "webpack --mode=development -w"
+        "dev": "webpack-dev-server --mode=development",
+        "build": "webpack --mode=production"
     }
     ```
 
 - Configurando **webpack**, arquivo `webpack.config.js`:
     ```javascript
     module.exports = {
-        entry: './main.js', // Arquivo principal
-        output: { // Qual arquivo deve conter o código convertido
-            path: __dirname,
+        entry: [
+            '@babel/polyfill',
+            './src/main.js',
+        ],
+        output: {
+            path: __dirname + '/public',
             filename: 'bundle.js'
         },
+        devServer: {
+            contentBase: __dirname + '/public'
+        },
         module: {
-            rules: [ // Informa como o webpack deve se comportar na importação de novos arquivos .js
+            rules: [
                 {
                     test: /\.js$/,
                     exclude: /node_modules/,
@@ -194,9 +208,48 @@ Servidor de desenvolvimento para quem desenvolve em JavaScript
     ```
 
 - Template Literals
-  ```javascript
-    const nome = 'Cleef';
-    const idade = 24;
+    ```javascript
+        const nome = 'Cleef';
+        const idade = 24;
 
-    console.log(`Meu nome é ${nome} e eu tenho ${idade} anos de idade.`); // Out: Meu nome é Cleef e eu tenho 24 anos de idade.
+        console.log(`Meu nome é ${nome} e eu tenho ${idade} anos de idade.`); // Out: Meu nome é Cleef e eu tenho 24 anos de idade.
+        ```
+
+- Async e Await - [Info](https://javascript.info/async-await)
+    ```javascript
+    const minhaPromise = () => new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log('Minha Promise!');
+        }, 2000);
+    });
+
+    // Async e Await
+    async function executaPromise() {
+        const response = await minhaPromise();
+
+        console.log(response);
+    }
+
+    executaPromise();
+    ```
+
+- Axios - [Info](https://github.com/axios/axios)
+    ```javascript
+    import axios from 'axios';
+
+    class Api {
+        static async getUserInfo(username) {
+            try {
+                const response = await axios.get(
+                    `http://api.github.com/users/${username}`
+                );
+
+                console.log(response.data);
+            } catch (err) {
+                console.warn('Erro aos buscar usuário!');
+            }
+        }
+    }
+
+    Api.getUserInfo('cleefsouza');
     ```

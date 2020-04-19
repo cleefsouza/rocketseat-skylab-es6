@@ -1,11 +1,11 @@
 module.exports = {
-    entry: './main.js', // Arquivo principal
-    output: { // Qual arquivo deve conter o código convertido
+    entry: './main.js',
+    output: {
         path: __dirname,
         filename: 'bundle.js'
     },
     module: {
-        rules: [ // Informa como o webpack deve se comportar na importação de novos arquivos .js
+        rules: [
             {
                 test: /\.js$/,
                 exclude: /node_modules/,

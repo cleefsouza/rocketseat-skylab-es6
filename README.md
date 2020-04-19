@@ -26,14 +26,14 @@ Servidor de desenvolvimento para quem desenvolve em JavaScript
 - Comando `yarn init` inicia o arquivo `package.json` que armazena as informações das dependências
 - Pasta `node_modules` armazena todas as dependências do projeto
 - Configurando **babel**, aquivo `.babelrc`:
-    ```json
+    ```javascript
     {
-        "presets" : ["@babel/preset-env"] # converte automaticamento o código independente do ambiente trabalhado
+        "presets" : ["@babel/preset-env"] // converte automaticamento o código independente do ambiente trabalhado
     }
     ```
 
 - Gerando o arquivo `bundle.js`, adicionar comandos dentro do arquivo `pacakge.json`:
-    ```json
+    ```javascript
     "scripts" : {
         "dev" : "babel ./main.js -o ./bundle.js -w"
     }

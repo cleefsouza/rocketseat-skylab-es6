@@ -9,6 +9,10 @@ Curso JavaScript ES6, 4 módulos | 22 aluas
 - @babel/cli
 - @babel/preset-env
 - @babel/core
+- @babel/plugin-proposal-object-rest-spread
+- babel-loader@8.0.0-beta.0
+- webpack
+- webpack-cli
 
 #### Conceitos
 
@@ -28,15 +32,38 @@ Servidor de desenvolvimento para quem desenvolve em JavaScript
 - Configurando **babel**, aquivo `.babelrc`:
     ```javascript
     {
-        "presets" : ["@babel/preset-env"] // converte automaticamento o código independente do ambiente trabalhado
+        "presets" : ["@babel/preset-env"],
+        "plugins": ["@babel/plugin-proposal-object-rest-spread"]
     }
     ```
 
 - Gerando o arquivo `bundle.js`, adicionar comandos dentro do arquivo `pacakge.json`:
     ```javascript
     "scripts" : {
-        "dev" : "babel ./main.js -o ./bundle.js -w"
+        "dev": "webpack --mode=development -w"
     }
+    ```
+
+- Configurando **webpack**, arquivo `webpack.config.js`:
+    ```javascript
+    module.exports = {
+        entry: './main.js', // Arquivo principal
+        output: { // Qual arquivo deve conter o código convertido
+            path: __dirname,
+            filename: 'bundle.js'
+        },
+        module: {
+            rules: [ // Informa como o webpack deve se comportar na importação de novos arquivos .js
+                {
+                    test: /\.js$/,
+                    exclude: /node_modules/,
+                    use: {
+                        loader: 'babel-loader'
+                    }
+                }
+            ]
+        }
+    };
     ```
 
 #### Features
@@ -65,4 +92,111 @@ Servidor de desenvolvimento para quem desenvolve em JavaScript
             return a + b;
         }
     }
+    ```
+
+- Constantes e variaveis de escopo
+    ```javascript
+    const CONSTANTE = 1; // Não pode ter seu valor reatribuido
+
+    function escopo(x) {
+        let varEscopo = 2; // Let: variavel só poderá ser utilizada dentro do escopo da função
+    }
+    ```
+
+- Operações com array
+    ```javascript
+    const arr = [1, 2, 3, 4, 5];
+
+    // Percorre o vetor e retorna uma ação
+    arr.map(function(item, index){
+        return item * 2; // Out: [2, 4, 6, 8, 10]
+    });
+
+    // Consome todo o vetor e transforma em uma unica informação
+    arr.reduce(function(total, next){
+        return total + next; // Out: 15
+    });
+
+    // Filtra os valores dentro do vetor de acordo com a condição passada
+    arr.filter(function(item){
+        return item % 2 === 0; // Out: [2, 4]
+    });
+
+    // Buscar uma informação dentro do vetor
+    arr.find(function(item){
+        return item === 4; // Out: 4
+    });
+    ```
+
+- Arrow Functions
+    ```javascript
+    const arr = [1, 2, 3, 4, 5];
+
+    /**
+     * () => {}
+     */
+
+    // Um parametro
+    const par = arr.filter(item => {
+        return item % 2 === 0; // Out: [2, 4]
+    });
+
+    // Mais de um parametro
+    const impar = arr.filter((item, index) => {
+        return item % 2 !== 0; // Out: [1, 3, 5]
+    });
+
+    // Um parametro e um retorno
+    const sub = arr.filter(item => item - 5); // Out: [1, 2, 3, 4]
+    ```
+
+- Desestruturação
+    ```javascript
+    /**
+     * [] para vetores
+     * {} para objetos
+     */
+
+    const usuario = {
+        nome: 'Cleef',
+        idade: 24,
+        endecero: {
+            cidade: 'Santa Rita',
+            estado: 'PB'
+        },
+    };
+
+    const { nome, idade } = usuario; // Desestruturando
+
+    console.log(nome, usuario); // Out: Diego 23
+    ```
+
+- Rest e Spread
+    ```javascript
+    const arr = [1, 2, 3, 4, 5];
+
+    /**
+     * Usa-se "..." para utilizar o conceito de REST
+     */
+
+    const [ a, b, ...resto ] = arr;
+
+    console.log(a, b, resto); // Out: 1 2 [3, 4, 5]
+    ```
+
+    ```javascript
+    const arr1 = [1, 2, 3];
+    const arr2 = [4, 5, 6];
+
+    const arr3 = [...arr1, ...arr2]; // Unindo dois vetores utilizando SPREAD
+
+    console.log(arr3); // Out: [1, 2, 3, 4, 5, 6]
+    ```
+
+- Template Literals
+  ```javascript
+    const nome = 'Cleef';
+    const idade = 24;
+
+    console.log(`Meu nome é ${nome} e eu tenho ${idade} anos de idade.`); // Out: Meu nome é Cleef e eu tenho 24 anos de idade.
     ```
